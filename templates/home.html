@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto;
+            max-width: 800px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .post {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .post h3 {
+            color: #444;
+        }
+        .post p {
+            color: #666;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+        }
+        .delete-btn:hover {
+            background-color: #a71d2a;
+        }
+        .alert{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blog Posts</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+        {% if current_user.id == 1 %}
+        <a href="{{ url_for('create') }}"><button>Create New Post</button></a>
+        {% endif %}
+            {% for post in blog_post %}
+        <div class="post">
+
+            <h3>{{ post.heading }}</h3>
+            <p>{{ post.subhead }}</p>
+            <p> Author: {{ post.user.name }}</p>
+            <a href="{{ url_for('read_more', post_read=post.id) }}"><button>Read More</button></a>
+            {% if current_user.id == 1 %}
+            <a href="{{ url_for('edit_post', post_id=post.id) }}"> <button>Edit</button></a>
+            <a href="{{ url_for('delete', post_delete=post.id) }}"><button class="delete-btn">Delete</button></a>
+            {% endif %}
+        </div>
+                    {% endfor %}
+            </div>
+</body>
+</html>
